@@ -9,9 +9,9 @@ url = url + "Return?page=return&";
 
 
 Map<String, String[]> parameters = request.getParameterMap();
-for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
-    url += entry.getKey() + "=" + request.getParameter(entry.getKey()) + "&";
-        
+for (String key : parameters.keySet()) {
+    //url += entry.getKey() + "=" + request.getParameter(entry.getKey()) + "&";
+    url += key  + "=" + parameters.get(key)[0] + "&";
     }
 
 %>
