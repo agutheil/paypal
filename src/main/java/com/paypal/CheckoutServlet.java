@@ -1,9 +1,8 @@
 package com.paypal;
 
-
 /*==================================================================
- PayPal Express Check out Call
- ===================================================================
+PayPal Express Check out Call
+===================================================================
 */
 
 
@@ -23,44 +22,44 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 public class CheckoutServlet  extends HttpServlet {
 
-    /**
+   /**
 	 * 
 	 */
 	private static final long serialVersionUID = -2722761580200224133L;	
-    
+   
 	public void doPost(HttpServletRequest request,
-                      HttpServletResponse response)
-        throws ServletException, IOException {
+                     HttpServletResponse response)
+       throws ServletException, IOException {
 		HttpSession session = request.getSession();
-        PayPal paypal = new PayPal();
-        /*
-        '------------------------------------
-        ' The returnURL is the location where buyers return to when a
-        ' payment has been successfully authorized.
-        '------------------------------------
-        */
-        
-        String returnURL = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/Return?page=review";
-        if(paypal.getUserActionFlag().equals("true"))
-        	returnURL = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/Return?page=return";
+       PayPal paypal = new PayPal();
+       /*
+       '------------------------------------
+       ' The returnURL is the location where buyers return to when a
+       ' payment has been successfully authorized.
+       '------------------------------------
+       */
        
-        /*
-        '------------------------------------
-        ' The cancelURL is the location buyers are sent to when they hit the
-        ' cancel button during authorization of payment during the PayPal flow
-        '------------------------------------
-        */
-        String cancelURL = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/cancel.jsp";
+       String returnURL = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/Return?page=review";
+       if(paypal.getUserActionFlag().equals("true"))
+       	returnURL = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/Return?page=return";
+      
+       /*
+       '------------------------------------
+       ' The cancelURL is the location buyers are sent to when they hit the
+       ' cancel button during authorization of payment during the PayPal flow
+       '------------------------------------
+       */
+       String cancelURL = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/cancel.jsp";
 		Map<String,String> checkoutDetails = new HashMap<String, String>() ;
 		checkoutDetails=setRequestParams(request);
-        //Redirect to check out page for check out mark
-        if(!isSet(request.getParameter("Confirm")) && isSet(request.getParameter("checkout"))){
-        	session.setAttribute("checkoutDetails", checkoutDetails);
+       //Redirect to check out page for check out mark
+       if(!isSet(request.getParameter("Confirm")) && isSet(request.getParameter("checkout"))){
+       	session.setAttribute("checkoutDetails", checkoutDetails);
 
-    		if(isSet(request.getParameter("checkout")) || isSet(session.getAttribute("checkout"))) {
-    			session.setAttribute("checkout", StringEscapeUtils.escapeHtml4(request.getParameter("checkout")));
-    		}
-    		
+   		if(isSet(request.getParameter("checkout")) || isSet(session.getAttribute("checkout"))) {
+   			session.setAttribute("checkout", StringEscapeUtils.escapeHtml4(request.getParameter("checkout")));
+   		}
+   		
 	    	//Assign the Return and Cancel to the Session object for ExpressCheckout Mark
 	    	session.setAttribute("EXPRESS_MARK", "ECMark");
 	    	
@@ -70,13 +69,13 @@ public class CheckoutServlet  extends HttpServlet {
 	    	if (dispatcher != null){
 	    		dispatcher.forward(request, response);
 	    	}
-        }
-        else{
-        	Map<String, String> nvp=null;
-        	if(isSet(session.getAttribute("EXPRESS_MARK")) && session.getAttribute("EXPRESS_MARK").equals("ECMark")){
-        		checkoutDetails.putAll((Map<String, String>) session.getAttribute("checkoutDetails"));
-        		checkoutDetails.putAll(setRequestParams(request));
-        		if(isSet(checkoutDetails.get("shipping_method"))) {
+       }
+       else{
+       	Map<String, String> nvp=null;
+       	if(isSet(session.getAttribute("EXPRESS_MARK")) && session.getAttribute("EXPRESS_MARK").equals("ECMark")){
+       		checkoutDetails.putAll((Map<String, String>) session.getAttribute("checkoutDetails"));
+       		checkoutDetails.putAll(setRequestParams(request));
+       		if(isSet(checkoutDetails.get("shipping_method"))) {
 	        		BigDecimal new_shipping = new BigDecimal(checkoutDetails.get("shipping_method")); //need to change this value, just for testing
 	        		BigDecimal shippingamt = new BigDecimal(checkoutDetails.get("PAYMENTREQUEST_0_SHIPPINGAMT"));
 	        		BigDecimal paymentAmount = new BigDecimal(checkoutDetails.get("PAYMENTREQUEST_0_AMT"));
@@ -94,12 +93,12 @@ public class CheckoutServlet  extends HttpServlet {
 		        	returnURL = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/lightboxreturn.jsp";
 	        		nvp = paypal.callMarkExpressCheckout(checkoutDetails, returnURL, cancelURL);  
 	        		session.setAttribute("checkoutDetails", checkoutDetails);
-        	} else {
-        		session.invalidate();
-        		session = request.getSession();
-        		 nvp = paypal.callShortcutExpressCheckout (checkoutDetails, returnURL, cancelURL);
-        		 session.setAttribute("checkoutDetails", checkoutDetails);
-        	}
+       	} else {
+       		session.invalidate();
+       		session = request.getSession();
+       		 nvp = paypal.callShortcutExpressCheckout (checkoutDetails, returnURL, cancelURL);
+       		 session.setAttribute("checkoutDetails", checkoutDetails);
+       	}
 	        
 			String strAck = nvp.get("ACK").toString().toUpperCase();
 	        if(strAck !=null && (strAck.equals("SUCCESS") || strAck.equals("SUCCESSWITHWARNING") ))
@@ -107,7 +106,7 @@ public class CheckoutServlet  extends HttpServlet {
 	            session.setAttribute("TOKEN", nvp.get("TOKEN").toString());
 	            //Redirect to paypal.com
 	            paypal.redirectURL(response, nvp.get("TOKEN").toString(),(isSet(session.getAttribute("EXPRESS_MARK")) && session.getAttribute("EXPRESS_MARK").equals("ECMark") || (paypal.getUserActionFlag().equalsIgnoreCase("true"))) );
- 	        }
+	        }
 	        else
 	        {
 	            // Display a user friendly Error on the page using any of the following error information returned by PayPal
@@ -129,14 +128,15 @@ public class CheckoutServlet  extends HttpServlet {
 	        	}
 	            
 	        }
-        }
+       }
 }
 
 
 private Map<String,String> setRequestParams(HttpServletRequest request){
 	Map<String,String> requestMap = new HashMap<String,String>();
-	for (String key : request.getParameterMap().keySet()) {
-		requestMap.put(key, StringEscapeUtils.escapeHtml4(request.getParameterMap().get(key)[0]));
+	Map<String, String[]> m = request.getParameterMap();
+	for (String key : m.keySet()) {
+		requestMap.put(key, StringEscapeUtils.escapeHtml4(m.get(key)[0]));
 		}
 	
 	return requestMap;

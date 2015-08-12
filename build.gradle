@@ -1,20 +1,9 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE")
-
-        classpath ('se.transmode.gradle:gradle-docker:1.2')
-    }
-}
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
 apply plugin: 'idea'
-apply plugin: 'spring-boot'
-apply plugin: 'docker'
+apply plugin: 'war'
+apply plugin: 'jetty'
 
 group = 'com.mightymerce.paypal'
 version = '0.1.0'
@@ -25,26 +14,23 @@ jar {
 }
 
 repositories {
-    maven { url 'http://repo.spring.io/milestone' }
-    maven { url 'http://repo.spring.io/snapshot' }
-    maven { url 'https://repository.jboss.org/nexus/content/repositories/releases' }
-    maven { url 'https://oss.sonatype.org/content/repositories/releases' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url 'http://repo.maven.apache.org/maven2' }
+  mavenCentral()
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-}
+    providedCompile 'javax.servlet:servlet-api:2.5'
+    runtime 'javax.servlet:jstl:1.1.2'
+    compile("org.apache.commons:commons-lang3:3.0.1")
 
-distDocker {
-    exposePort 8081
-    dryRun true
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
+}
+
+repositories {
+  mavenCentral()
 }

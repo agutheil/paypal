@@ -171,9 +171,9 @@ public class ReturnServlet extends HttpServlet {
     
 	private Map<String,String> setRequestParams(HttpServletRequest request){
 		Map<String,String> requestMap = new HashMap<String,String>();
-		for (String key : request.getParameterMap().keySet()) {
-			
-			requestMap.put(key, request.getParameterMap().get(key)[0]);
+		Map<String, String[]> m = request.getParameterMap();
+		for (String key : m.keySet()) {
+			requestMap.put(key, m.get(key)[0]);
 			}
 		
 		return requestMap;
