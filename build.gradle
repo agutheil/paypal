@@ -8,9 +8,18 @@ apply plugin: 'jetty'
 group = 'com.mightymerce.paypal'
 version = '0.1.0'
 
-jar {
+
+war {
     baseName = 'mm-paypal'
     version =  '0.1.0'
+    webXml = file('src/main/webapp/WEB-INF/web.xml') // copies a file to WEB-INF/web.xml
+    from {configurations.compile.collect {
+			it.isDirectory() ? it : project.zipTree(it)
+		}
+	}
+	from "$buildDir/classes/main"
+	from "$buildDir/resources/main"
+	manifest { attributes 'Main-Class': 'com.paypal.Application' }
 }
 
 repositories {
@@ -24,6 +33,13 @@ dependencies {
     providedCompile 'javax.servlet:servlet-api:2.5'
     runtime 'javax.servlet:jstl:1.1.2'
     compile("org.apache.commons:commons-lang3:3.0.1")
+    compile('org.apache.tomcat.embed:tomcat-embed-core:7.0.57')
+    compile('org.apache.tomcat.embed:tomcat-embed-logging-juli:7.0.57')
+    compile('org.apache.tomcat.embed:tomcat-embed-jasper:7.0.57')
+    compile('org.apache.tomcat:tomcat-jasper:7.0.57')
+    compile('org.apache.tomcat:tomcat-jasper-el:7.0.57')
+    compile('org.apache.tomcat:tomcat-jsp-api:7.0.57')
+   
 
 }
 
