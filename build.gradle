@@ -1,12 +1,26 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath ('se.transmode.gradle:gradle-docker:1.2')
+    }
+}
+
+apply plugin: 'application'
+apply plugin: 'docker'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'idea'
 apply plugin: 'war'
 apply plugin: 'jetty'
+apply plugin: 'docker'
 
 group = 'com.mightymerce.paypal'
 version = '0.1.0'
+mainClassName='com.mightymerce.paypal.Application'
 
 
 war {
@@ -39,14 +53,13 @@ dependencies {
     compile('org.apache.tomcat:tomcat-jasper:7.0.57')
     compile('org.apache.tomcat:tomcat-jasper-el:7.0.57')
     compile('org.apache.tomcat:tomcat-jsp-api:7.0.57')
-   
+}
 
+distDocker {
+    exposePort 8080
+    dryRun true
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
-}
-
-repositories {
-  mavenCentral()
 }
