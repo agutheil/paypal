@@ -19,7 +19,7 @@ war {
 	}
 	from "$buildDir/classes/main"
 	from "$buildDir/resources/main"
-	manifest { attributes 'Main-Class': 'com.paypal.Application' }
+	manifest { attributes 'Main-Class': 'com.mightymerce.paypal.Application' }
 }
 
 repositories {

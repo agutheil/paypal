@@ -1,4 +1,4 @@
-package com.paypal;
+package com.mightymerce.paypal;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

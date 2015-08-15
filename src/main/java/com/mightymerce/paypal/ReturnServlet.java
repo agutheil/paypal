@@ -1,4 +1,4 @@
-package com.paypal;
+package com.mightymerce.paypal;
 
 import java.io.IOException;
 import java.math.BigDecimal;

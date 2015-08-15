@@ -1,4 +1,4 @@
-package com.paypal;
+package com.mightymerce.paypal;
 
 /*==================================================================
 PayPal Express Check out Call
