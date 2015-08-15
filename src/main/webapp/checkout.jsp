@@ -1,3 +1,4 @@
+<%@page import="com.mightymerce.paypal.PayPal"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -307,9 +308,9 @@
    </div>
  <script type="text/javascript">
  window.paypalCheckoutReady = function () {
- paypal.checkout.setup('<%= new com.paypal.PayPal().getGvAPIUserName() %>', {
+ paypal.checkout.setup('<%= new com.mightymerce.paypal.PayPal().getGvAPIUserName() %>', {
  button: 'placeOrderBtn',
- environment: '<%= new com.paypal.PayPal().getEnvironment() %>',
+ environment: '<%= new com.mightymerce.paypal.PayPal().getEnvironment() %>',
  condition: function () {
 	  return !!document.getElementById('paypal_payment_option').checked;
 	  }

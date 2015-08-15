@@ -9,7 +9,7 @@
   </welcome-file-list>
   <servlet>
     <servlet-name>Checkout</servlet-name>
-    <servlet-class>com.paypal.CheckoutServlet</servlet-class>
+    <servlet-class>com.mightymerce.paypal.CheckoutServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Checkout</servlet-name>
@@ -19,7 +19,7 @@
     <description></description>
     <display-name>Return</display-name>
     <servlet-name>Return</servlet-name>
-    <servlet-class>com.paypal.ReturnServlet</servlet-class>
+    <servlet-class>com.mightymerce.paypal.ReturnServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Return</servlet-name>
