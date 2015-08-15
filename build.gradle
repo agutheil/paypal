@@ -8,33 +8,51 @@ buildscript {
     }
 }
 
-apply plugin: 'application'
-apply plugin: 'docker'
 apply plugin: 'java'
+apply plugin: 'application'
 apply plugin: 'eclipse'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'idea'
-apply plugin: 'war'
-apply plugin: 'jetty'
 apply plugin: 'docker'
 
 group = 'com.mightymerce.paypal'
 version = '0.1.0'
-mainClassName='com.mightymerce.paypal.Application'
+mainClassName = 'com.mightymerce.paypal.Application'
 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/java'
+        }
+        resources {
+            srcDir 'src/resources'
+        }
+    }
+    webapp {
+        resources {
+            srcDir 'src/resources'
+        }
+    }
+}
 
-war {
+jar {
     baseName = 'mm-paypal'
     version =  '0.1.0'
-    webXml = file('src/main/webapp/WEB-INF/web.xml') // copies a file to WEB-INF/web.xml
     from {configurations.compile.collect {
-			it.isDirectory() ? it : project.zipTree(it)
-		}
-	}
-	from "$buildDir/classes/main"
-	from "$buildDir/resources/main"
-	manifest { attributes 'Main-Class': 'com.mightymerce.paypal.Application' }
+            it.isDirectory() ? it : project.zipTree(it)
+        }
+    }
+    from "$buildDir/classes/main"
+    from "$buildDir/resources/main"
+    manifest { attributes 'Main-Class': 'com.mightymerce.paypal.Application' }
 }
+
+task copyWebApp(type: Copy) {
+    from 'src/webapp/resources/'
+    into 'build/resources/main/public'
+}
+
+jar.dependsOn copyWebApp
 
 repositories {
   mavenCentral()
@@ -44,7 +62,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    providedCompile 'javax.servlet:servlet-api:2.5'
+    compile 'javax.servlet:servlet-api:2.5'
     runtime 'javax.servlet:jstl:1.1.2'
     compile("org.apache.commons:commons-lang3:3.0.1")
     compile('org.apache.tomcat.embed:tomcat-embed-core:7.0.57')
