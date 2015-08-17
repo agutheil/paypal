@@ -26,7 +26,7 @@ public class Application {
 			c.setIdleTimeout(1000);
 			c.setAcceptQueueSize(10);
 			c.setPort(8080);
-			c.setHost("localhost");
+			c.setHost("0.0.0.0");
 			
 			String webDir = Application.class.getClassLoader().getResource("webapp").toExternalForm();
 			
