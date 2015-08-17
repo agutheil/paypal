@@ -19,22 +19,6 @@ group = 'com.mightymerce.paypal'
 version = '0.1.0'
 mainClassName = 'com.mightymerce.paypal.Application'
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/java'
-        }
-        resources {
-            srcDir 'src/resources'
-        }
-    }
-    webapp {
-        resources {
-            srcDir 'src/resources'
-        }
-    }
-}
-
 jar {
     baseName = 'mm-paypal'
     version =  '0.1.0'
@@ -47,13 +31,6 @@ jar {
     manifest { attributes 'Main-Class': 'com.mightymerce.paypal.Application' }
 }
 
-task copyWebApp(type: Copy) {
-    from 'src/webapp/resources/'
-    into 'build/resources/main/public'
-}
-
-jar.dependsOn copyWebApp
-
 repositories {
   mavenCentral()
 }
@@ -65,12 +42,12 @@ dependencies {
     compile 'javax.servlet:servlet-api:2.5'
     runtime 'javax.servlet:jstl:1.1.2'
     compile("org.apache.commons:commons-lang3:3.0.1")
-    compile('org.apache.tomcat.embed:tomcat-embed-core:7.0.57')
-    compile('org.apache.tomcat.embed:tomcat-embed-logging-juli:7.0.57')
-    compile('org.apache.tomcat.embed:tomcat-embed-jasper:7.0.57')
-    compile('org.apache.tomcat:tomcat-jasper:7.0.57')
-    compile('org.apache.tomcat:tomcat-jasper-el:7.0.57')
-    compile('org.apache.tomcat:tomcat-jsp-api:7.0.57')
+    compile 'org.eclipse.jetty:jetty-server:9.3.2.v20150730'
+    compile 'org.eclipse.jetty:jetty-servlet:9.3.2.v20150730'
+    compile 'org.eclipse.jetty:jetty-webapp:9.3.2.v20150730'
+    compile 'org.eclipse.jetty:jetty-annotations:9.3.2.v20150730'
+    compile 'org.eclipse.jetty:apache-jsp:9.3.2.v20150730'
+    compile 'org.eclipse.jetty:apache-jstl:9.3.2.v20150730'
 }
 
 distDocker {
