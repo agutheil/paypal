@@ -12,14 +12,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.social.oauth2.AccessGrant;
+import org.springframework.social.oauth2.OAuth2Template;
+import org.springframework.social.oauth2.TokenStrategy;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
 
 public class ReturnServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	   
+	private OAuth2Template oAuth2Template;
+	private MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+	private String coreUrl = "http://localhost:8082";
     
     public ReturnServlet() {
         super();
-    
+        oAuth2Template = new OAuth2Template("mightymerceapp","mySecretOAuthSecret",coreUrl+"/oauth/authorize", coreUrl+"/oauth/authenticate", coreUrl+"/oauth/token");
+        oAuth2Template.setUseParametersForClientAuthentication(false);
+        params.set("scope", "read write");
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -129,6 +139,7 @@ public class ReturnServlet extends HttpServlet {
 		    	result.putAll(checkoutDetails);
 		    	request.setAttribute("ack", strAck);
 		    	session.invalidate();
+		    	updateCoreWithCheckoutDetails(results, checkoutDetails, strAck);
 	    	}else{
 	    		//Display a user friendly Error on the page using any of the following error information returned by PayPal
 	            String errorCode = results.get("L_ERRORCODE0").toString();
@@ -164,7 +175,19 @@ public class ReturnServlet extends HttpServlet {
    
     
    
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    private void updateCoreWithCheckoutDetails(HashMap results, Map<String, String> checkoutDetails, String strAck) {
+    	AccessGrant ag = oAuth2Template.exchangeCredentialsForAccess("admin", "admin",params);
+        MightyCore mightyCore = new MightyCore(ag.getAccessToken(), TokenStrategy.AUTHORIZATION_HEADER, coreUrl);
+        //extract L_PAYMENTREQUEST_0_NUMBER0 from checkoutDetails
+        String articleId = checkoutDetails.get("L_PAYMENTREQUEST_0_NUMBER0");
+        String payerId = checkoutDetails.get("payer_id");
+        String txId = (String) results.get("PAYMENTINFO_0_TRANSACTIONID");
+        String paymentStatus = (String) results.get("PAYMENTINFO_0_PAYMENTSTATUS");
+        
+        mightyCore.createOrder(articleId, payerId, txId, paymentStatus);
+	}
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
     		throws ServletException, IOException {
     			doGet(request, response);
     		}
