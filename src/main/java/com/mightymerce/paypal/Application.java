@@ -10,19 +10,19 @@ import org.eclipse.jetty.webapp.WebAppContext;
 public class Application {
 	public static void main(String[] args) throws Exception 
     {
-		
+		int port = Integer.parseInt(System.getenv("server.port"));
 		Application app = new Application();
-		app.start();
+		app.start(port);
 		    
     }
 	
-	public void start() throws Exception{
+	public void start(int port) throws Exception{
 			// See http://www.eclipse.org/jetty/documentation/current/embedded-examples.html#embedded-webapp-jsp for JSP delivery in Jetty,
 			Server server = new Server();
 			ServerConnector c = new ServerConnector(server);
 			c.setIdleTimeout(1000);
 			c.setAcceptQueueSize(10);
-			c.setPort(8080);
+			c.setPort(port);
 			c.setHost("0.0.0.0");
 			
 			String webDir = Application.class.getClassLoader().getResource("webapp").toExternalForm();

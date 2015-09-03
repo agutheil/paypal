@@ -23,7 +23,9 @@ public class ReturnServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private OAuth2Template oAuth2Template;
 	private MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-	private String coreUrl = "http://localhost:8082";
+	private String coreUrl = System.getenv("mightymerce.coreUrl");
+	private String mightyUser = System.getenv("mightymerce.user");
+	private String mightyPw = System.getenv("mightymerce.pw");
     
     public ReturnServlet() {
         super();
@@ -176,7 +178,7 @@ public class ReturnServlet extends HttpServlet {
     
    
     private void updateCoreWithCheckoutDetails(HashMap results, Map<String, String> checkoutDetails, String strAck) {
-    	AccessGrant ag = oAuth2Template.exchangeCredentialsForAccess("admin", "admin",params);
+    	AccessGrant ag = oAuth2Template.exchangeCredentialsForAccess(mightyUser, mightyPw,params);
         MightyCore mightyCore = new MightyCore(ag.getAccessToken(), TokenStrategy.AUTHORIZATION_HEADER, coreUrl);
         //extract L_PAYMENTREQUEST_0_NUMBER0 from checkoutDetails
         String articleId = checkoutDetails.get("L_PAYMENTREQUEST_0_NUMBER0");
