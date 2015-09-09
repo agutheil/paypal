@@ -1,5 +1,7 @@
 package com.mightymerce.paypal;
 
+import java.math.BigDecimal;
+
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
 import org.springframework.social.oauth2.TokenStrategy;
 
@@ -26,10 +28,13 @@ public class MightyCore extends AbstractOAuth2ApiBinding {
         this.coreUrl = coreUrl;
     }
 
-    public void createOrder(String articleId, String payerId, String txId, String paymentStatus) {
+    public void createOrder(Long articleId, String payerId, String txId, String paymentStatus, BigDecimal amount) {
         Order order = new Order();
-        order.setTest(String.format("ArticleID: %s; PayerId: %s; TransactionID: %s", articleId, payerId, txId));
-        order.setTest2(String.format("PaymentStatus: %s", paymentStatus));
-        getRestTemplate().postForObject(coreUrl+"/api/socialOrders/",order,Order.class);
+        order.setArticle(articleId);
+        order.setPayerId(payerId);
+        order.setTransactionId(txId);
+        order.setPaymentStatus(paymentStatus.toLowerCase());
+        order.setAmount(amount);
+        getRestTemplate().postForObject(coreUrl+"/api/flatSocialOrders/",order,Order.class);
     }
 }

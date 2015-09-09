@@ -10,7 +10,10 @@ import org.eclipse.jetty.webapp.WebAppContext;
 public class Application {
 	public static void main(String[] args) throws Exception 
     {
-		int port = Integer.parseInt(System.getenv("server.port"));
+		int port = 8080;
+		if(System.getenv("server.port")!=null){
+			port = Integer.parseInt(System.getenv("server.port"));
+		}
 		Application app = new Application();
 		app.start(port);
 		    

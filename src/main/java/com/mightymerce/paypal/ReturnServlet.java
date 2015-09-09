@@ -29,7 +29,7 @@ public class ReturnServlet extends HttpServlet {
     
     public ReturnServlet() {
         super();
-        oAuth2Template = new OAuth2Template("mightymerceapp","mySecretOAuthSecret",coreUrl+"/oauth/authorize", coreUrl+"/oauth/authenticate", coreUrl+"/oauth/token");
+        oAuth2Template = new OAuth2Template("coreapp","mySecretOAuthSecret",coreUrl+"/oauth/authorize", coreUrl+"/oauth/authenticate", coreUrl+"/oauth/token");
         oAuth2Template.setUseParametersForClientAuthentication(false);
         params.set("scope", "read write");
     }
@@ -181,12 +181,13 @@ public class ReturnServlet extends HttpServlet {
     	AccessGrant ag = oAuth2Template.exchangeCredentialsForAccess(mightyUser, mightyPw,params);
         MightyCore mightyCore = new MightyCore(ag.getAccessToken(), TokenStrategy.AUTHORIZATION_HEADER, coreUrl);
         //extract L_PAYMENTREQUEST_0_NUMBER0 from checkoutDetails
-        String articleId = checkoutDetails.get("L_PAYMENTREQUEST_0_NUMBER0");
+        Long articleId = Long.parseLong(checkoutDetails.get("L_PAYMENTREQUEST_0_NUMBER0"));
         String payerId = checkoutDetails.get("payer_id");
         String txId = (String) results.get("PAYMENTINFO_0_TRANSACTIONID");
         String paymentStatus = (String) results.get("PAYMENTINFO_0_PAYMENTSTATUS");
-        
-        mightyCore.createOrder(articleId, payerId, txId, paymentStatus);
+        String amtStr = (String) results.get("PAYMENTINFO_0_AMT");
+        BigDecimal amount = new BigDecimal(Double.parseDouble(amtStr));	
+        mightyCore.createOrder(articleId, payerId, txId, paymentStatus, amount);
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)

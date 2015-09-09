@@ -1,39 +1,60 @@
 package com.mightymerce.paypal;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-/**
- * Created by agutheil on 12.05.15.
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Order {
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public void setTest(String test) {
-        this.test = test;
-    }
+    
+    private Long article;
+    
+    private String payerId;
+    
+    private String transactionId;
+    
+    private String paymentStatus;
+    
+    private BigDecimal amount;
 
-    public void setTest2(String test2) {
-        this.test2 = test2;
-    }
+	public void setArticle(Long article) {
+		this.article = article;
+	}
 
-    private Long id;
+	public void setPayerId(String payerId) {
+		this.payerId = payerId;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setTransactionId(String txId) {
+		this.transactionId = txId;
+	}
 
-    public String getTest() {
-        return test;
-    }
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
 
-    public String getTest2() {
-        return test2;
-    }
+	public Long getArticle() {
+		return article;
+	}
 
-    private String test;
+	public String getPayerId() {
+		return payerId;
+	}
 
-        private String test2;
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
 }
